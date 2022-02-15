@@ -1,4 +1,6 @@
+from calendar import c
 from random import randint
+import turtle
 
 
 class Point:
@@ -29,15 +31,50 @@ class Rectangle:
         return (self.upper_right.x - self.lower_left.x) * (self.upper_right.y - self.lower_left.y)
 
 
-rect = Rectangle(Point(randint(0, 9), randint(0, 9)),
-                 Point(randint(10, 19), randint(10, 19)))
+class GUIRectangle(Rectangle):
+    def draw(self, canvas):
+        x_dist = self.upper_right.x - self.lower_left.x
+        y_dist = self.upper_right.y - self.lower_left.y
+        canvas.penup()
+        canvas.goto(self.lower_left.x, self.lower_left.y)
+        canvas.pendown()
+        canvas.forward(x_dist)
+        canvas.left(90)
+        canvas.forward(y_dist)
+        canvas.left(90)
+        canvas.forward(x_dist)
+        canvas.left(90)
+        canvas.forward(y_dist)
+
+
+class GUIPoint(Point):
+    def draw(self, canvas, size=5, color='red'):
+        canvas.penup()
+        canvas.goto(self.x, self.y)
+        canvas.pendown()
+        canvas.dot(size, color)
+
+
+gui_rect = GUIRectangle(Point(randint(0, 100), randint(0, 100)),
+                        Point(randint(200, 300), randint(200, 300)))
+
 
 print(
-    f"Rectangle coordinates: {rect.lower_left.x}, {rect.lower_left.y} and {rect.upper_right.x}, {rect.upper_right.y}")
+    f"Rectangle coordinates: {gui_rect.lower_left.x}, {gui_rect.lower_left.y} and {gui_rect.upper_right.x}, {gui_rect.upper_right.y}")
 
-print(f"Area of the rectange: {rect.area()}")
+print(f"Area of the rectangle: {gui_rect.area()}")
+
 
 x = float(input("Enter x coordinate: "))
 y = float(input("Enter y coordinate: "))
+
+gui_point = GUIPoint(x, y)
+
 print(
-    f"Your point was inside rectangle: {Point(x,y).is_within_rectangle(rect)}")
+    f"Your point was inside rectangle: {gui_point.is_within_rectangle(gui_rect)}")
+
+canvas = turtle.Turtle()
+gui_rect.draw(canvas)
+gui_point.draw(canvas)
+
+turtle.done()
